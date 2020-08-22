@@ -15,8 +15,4 @@ func(s *ServerAPI) FetchChats(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-func(s *ServerAPI) FetchChatsMessages(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodPost {
-        return
-    }
-}
+

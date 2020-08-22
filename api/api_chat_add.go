@@ -8,7 +8,7 @@ import (
 )
 
 type chatAddRequest struct {
-    Name string
+    Name    string
     Users []string
 }
 

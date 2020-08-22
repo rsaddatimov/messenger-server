@@ -7,9 +7,9 @@ import (
 )
 
 type messageAddRequest struct {
-    Chat string
+    Chat   string
     Author string
-    Text string
+    Text   string
 }
 
 func(s *ServerAPI) SendMessage(w http.ResponseWriter, r *http.Request) {
