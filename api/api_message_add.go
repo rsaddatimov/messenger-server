@@ -54,13 +54,18 @@ func(s *ServerAPI) SendMessage(w http.ResponseWriter, r *http.Request) {
     }
 
     // Записываем сообщение
-    query = "INSERT INTO Messages(chat, author, text) values($1, $2, $3) RETURNING id"
+    query = "INSERT INTO Messages(chat, author, text) values($1, $2, $3) RETURNING id, created_at"
     var id int
-    err := s.Conn.QueryRow(query, message.Chat, message.Author, message.Text).Scan(&id)
+    var created_at string
+    err := s.Conn.QueryRow(query, message.Chat, message.Author, message.Text).Scan(&id, &created_at)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
+
+    // Обновляем чат в который было послано сообщение
+    query = "UPDATE Chats SET lastUpdated=$1 WHERE id=$2"
+    s.Conn.Exec(query, created_at, message.Chat)
 
     fmt.Fprintln(w, id)
     w.WriteHeader(http.StatusOK)
