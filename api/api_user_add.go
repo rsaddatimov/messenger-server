@@ -22,11 +22,14 @@ func(s *ServerAPI) AddUser(w http.ResponseWriter, r *http.Request) {
         return
     }
 
+    // Проверяем существует ли уже данный пользователь в базе
     const count_query = "SELECT count(id) FROM Users WHERE username=$1"
     var count int = 0
-    err := s.Conn.QueryRow(count_query, user.Username).Scan(&count)
     
-    if err == nil && count > 0 {
+    if err := s.Conn.QueryRow(count_query, user.Username).Scan(&count); err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    } else if count > 0 {
         errstr := fmt.Sprintf("%s is already registered!", user.Username)
         http.Error(w, errstr, http.StatusNotFound)
         return

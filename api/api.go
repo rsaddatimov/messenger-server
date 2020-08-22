@@ -9,23 +9,14 @@ type ServerAPI struct {
     Conn *sql.DB
 }
 
-func(s *ServerAPI) SendMessage(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodPost {
-        wrongMethod(w, r)
-        return
-    }
-}
-
 func(s *ServerAPI) FetchChats(w http.ResponseWriter, r *http.Request) {
     if r.Method != http.MethodPost {
-        wrongMethod(w, r)
         return
     }
 }
 
 func(s *ServerAPI) FetchChatsMessages(w http.ResponseWriter, r *http.Request) {
     if r.Method != http.MethodPost {
-        wrongMethod(w, r)
         return
     }
 }

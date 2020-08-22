@@ -2,18 +2,14 @@ package api
 
 import (
     "fmt"
-    "net/http"
+    "database/sql"
 )
 
-func wrongMethod(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "Request has wrong method. Use POST request instead")
-    
-    w.WriteHeader(http.StatusBadRequest)
-}
+func countEntity(conn *sql.DB, id *string, entity_name string) (int, error) {
+    query_str := fmt.Sprintf("SELECT count(id) FROM %s WHERE id=$1", entity_name)
 
-func badRequest(w http.ResponseWriter, r *http.Request, err error) {
-    fmt.Fprintln(w, "Error while parsing json")
-    fmt.Fprintln(w, err)
+    var count int = 0
+    err := conn.QueryRow(query_str, id).Scan(&count)
 
-    w.WriteHeader(http.StatusBadRequest)
+    return count, err
 }
