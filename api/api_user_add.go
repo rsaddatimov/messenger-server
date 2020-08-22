@@ -35,6 +35,7 @@ func(s *ServerAPI) AddUser(w http.ResponseWriter, r *http.Request) {
         return
     }
     
+    // Записываем пользователя
     const insert_query = "INSERT INTO Users(username) values($1) RETURNING id"
     var id int
     if err := s.Conn.QueryRow(insert_query, user.Username).Scan(&id); err != nil {

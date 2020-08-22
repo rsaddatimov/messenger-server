@@ -50,7 +50,7 @@ func(s *ServerAPI) AddChat(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    // Добавляем чам в базу
+    // Записываем чат
     const insert_query = "INSERT INTO Chats(name, users) values($1, $2) RETURNING id"
     var id int
     if err := s.Conn.QueryRow(insert_query, chat.Name, users_str).Scan(&id); err != nil {
