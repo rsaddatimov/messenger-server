@@ -17,6 +17,6 @@ services:
     build: .
     ports:
       - 9000:900
-    command: ./server/main
+    #command: ./server/main
     depends_on:
       - database

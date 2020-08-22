@@ -1,56 +1,66 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
-	"net/http"
-	"time"
+    "database/sql"
+    "fmt"
+    "log"
+    "net/http"
+    "time"
 
-	"./api"
+    "./api"
 
-	_ "github.com/lib/pq"
+    _ "github.com/lib/pq"
 )
 
 func Connect() *sql.DB {
-	credential := "host=database user=postgres password=postgres db=messengerdb"
-	const retries = 5
+    credential := fmt.Sprintf(
+        "host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+        "database",
+        "5432",
+        "postgres",
+        "postgres",
+        "messengerdb",
+        "disable",
+    )
+    const retries = 5
 
-	for i := 1; i <= retries; i++ {
-		fmt.Printf("Trying to establish connection with database. Try count = %d...\n", i)
-		
-		db, err := sql.Open("postgres", credential)
+    for i := 1; i <= retries; i++ {
+        log.Printf("Trying to establish connection with database. Try count = %d...\n", i)
 
-		if err != nil {
-			time.Sleep(time.Second)
-			continue
-		}
+        db, err := sql.Open("postgres", credential)
 
-		if err := db.Ping(); err != nil {
-			time.Sleep(time.Second)
-		} else {
-			return db;
-		}
-	}
+        if err != nil {
+            log.Println(err)
+            time.Sleep(5 * time.Second)
+            continue
+        }
+        
+        if err := db.Ping(); err != nil {
+            log.Println(err)
+            time.Sleep(5 * time.Second)
+        } else {
+            return db;
+        }
+    }
 
-	return nil
+    return nil
 }
 
 func main() {
-	db := Connect()
+    db := Connect()
 
-	if db == nil {
-		log.Fatal("Unable to establish connection to database")
-	}
-	defer db.Close()
+    if db == nil {
+        log.Fatal("Unable to establish connection to database")
+    }
+    defer db.Close()
 
-	server := api.ServerAPI{Conn: db}
+    server := api.ServerAPI{Conn: db}
 
-	http.HandleFunc("/chats/add", server.AddChat)
-	http.HandleFunc("/chats/get", server.FetchChats)
-	http.HandleFunc("/messages/add", server.SendMessage)
-	http.HandleFunc("/messages/get", server.FetchChatsMessages)
-	http.HandleFunc("/users/add", server.AddUser)
-	
-	http.ListenAndServe(":9000", nil)
+    http.HandleFunc("/chats/add", server.AddChat)
+    http.HandleFunc("/chats/get", server.FetchChats)
+    http.HandleFunc("/messages/add", server.SendMessage)
+    http.HandleFunc("/messages/get", server.FetchChatsMessages)
+    http.HandleFunc("/users/add", server.AddUser)
+
+    http.ListenAndServe(":9000", nil)
 }

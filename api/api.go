@@ -1,18 +1,18 @@
 package api
 
 import (
-	"database/sql"
-	"fmt"
-	"net/http"
+    "database/sql"
+    "fmt"
+    "net/http"
 )
 
 type ServerAPI struct {
-	Conn *sql.DB
+    Conn *sql.DB
 }
 
 func(s *ServerAPI) AddUser(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "User was added!")
+    w.WriteHeader(http.StatusOK)
+    fmt.Fprintf(w, "User was added!")
 }
 
 func(s *ServerAPI) AddChat(w http.ResponseWriter, r *http.Request) {

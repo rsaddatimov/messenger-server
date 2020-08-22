@@ -7,3 +7,4 @@ WORKDIR /server
 
 RUN go get github.com/lib/pq
 RUN go build main.go
+CMD ./main
