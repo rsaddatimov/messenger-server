@@ -15,6 +15,12 @@ services:
   
   server:
     build: .
+    environment:
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: messengerdb
+      PGSSLMODE: disable
+      PGHOST: database
     ports:
       - 9000:9000
     depends_on:

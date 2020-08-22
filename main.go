@@ -2,7 +2,6 @@ package main
 
 import (
     "database/sql"
-    "fmt"
     "log"
     "net/http"
     "time"
@@ -14,22 +13,13 @@ import (
 
 // Подключение к базе данных
 func Connect() *sql.DB {
-    credential := fmt.Sprintf(
-        "host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-        "database",
-        "5432",
-        "postgres",
-        "postgres",
-        "messengerdb",
-        "disable",
-    )
     const retries = 5
 
     // Делаем несколько попыток
     for i := 1; i <= retries; i++ {
         log.Printf("Trying to establish connection with database. Try count = %d\n", i)
 
-        db, err := sql.Open("postgres", credential)
+        db, err := sql.Open("postgres", "")
 
         if err != nil {
             log.Println(err)
